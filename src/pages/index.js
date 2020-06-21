@@ -1,22 +1,51 @@
+import { graphql } from "gatsby"
+import _map from "lodash/map"
+import _uniqueId from "lodash/uniqueId"
 import React from "react"
-import { Link } from "gatsby"
-
-import Layout from "../components/layout"
-import Image from "../components/image"
+import "react-medium-image-zoom/dist/styles.css"
+import Photo from "../components/Photo"
 import SEO from "../components/seo"
+import "./index.css"
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link> <br />
-    <Link to="/using-typescript/">Go to "Using TypeScript"</Link>
-  </Layout>
-)
+class IndexPage extends React.Component {
+  render() {
+    const images = this.props.data.allFile.edges
+
+    return (
+      <div className="container">
+        <SEO title="Valentin" />
+        <h1>Valentin - Photos</h1>
+        {_map(images, image => (
+          <Photo
+            key={_uniqueId()}
+            fluid={image.node.childImageSharp.fluid}
+            alt={image.name}
+          />
+        ))}
+      </div>
+    )
+  }
+}
+
+export const IndexQuery = graphql`
+  query IndexQuery {
+    allFile(
+      filter: { extension: { eq: "jpg" } }
+      sort: { fields: [name], order: ASC }
+    ) {
+      edges {
+        node {
+          base
+          childImageSharp {
+            fluid(maxWidth: 4016) {
+              ...GatsbyImageSharpFluid
+            }
+          }
+          name
+        }
+      }
+    }
+  }
+`
 
 export default IndexPage
