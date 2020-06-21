@@ -14,7 +14,7 @@ class IndexPage extends React.Component {
     return (
       <div className="container">
         <SEO title="Valentin" />
-        <h1>Valentin - Photos</h1>
+        <h1>Valentin</h1>
         {_map(images, image => (
           <Photo
             key={_uniqueId()}
